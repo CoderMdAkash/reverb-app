@@ -79,7 +79,7 @@
             window.Echo.channel('posts')
                 .listen('.create', (data) => {
                     console.log('Order status updated: ', data);
-                    alert("New Post Received");
+                    
                     var d1 = document.getElementById('notification');
                     d1.insertAdjacentHTML('beforeend', '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i>  '+data.message+'</span></div>');
                 });

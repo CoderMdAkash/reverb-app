@@ -53,7 +53,15 @@ class PostCreate implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'message' => "[{$this->post->created_at}] New Post Received with title '{$this->post->title}'."
+            'id' => $this->post->id,
+            'title' => $this->post->title,
+            'body' => $this->post->body,
+            'created_at' => $this->post->created_at->toDateTimeString(),
+            'updated_at' => $this->post->updated_at->toDateTimeString(),
+            'user' => [
+                'id' => $this->post->user->id ?? null,
+                'name' => $this->post->user->name ?? null,
+            ],
         ];
     }
 }
