@@ -62,6 +62,7 @@ class PostCreate implements ShouldBroadcastNow
                 'id' => $this->post->user->id ?? null,
                 'name' => $this->post->user->name ?? null,
             ],
+            'message' => $this->post->title .' Post created successfully. At '. $this->post->created_at->toDateTimeString()
         ];
     }
 }
