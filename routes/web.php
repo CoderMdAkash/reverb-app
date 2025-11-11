@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    return redirect('/posts');
     return view('welcome');
 });
 
@@ -13,7 +14,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+});
 
 Route::get('/test', [PostController::class, 'test'])->name('posts.test');

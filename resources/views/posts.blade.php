@@ -18,7 +18,7 @@
                         
                     </div>
                     
-                    @if(auth()->user()->is_admin)
+                   
                     <p><strong>Create New Post</strong></p>
                     <form method="post" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
@@ -40,7 +40,7 @@
                             <button type="submit" class="btn btn-success btn-block"><i class="fa fa-save"></i> Submit</button>
                         </div>
                     </form>
-                    @endif
+                    
 
                     <p class="mt-4"><strong>Post List:</strong></p>
                     <table class="table table-bordered data-table">
@@ -74,7 +74,7 @@
 @endsection
 
 @section('script')
-@if(auth()->user()->is_admin)
+
     <script type="module">
             window.Echo.channel('posts')
                 .listen('.create', (data) => {
@@ -84,5 +84,5 @@
                     d1.insertAdjacentHTML('beforeend', '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i>  '+data.message+'</span></div>');
                 });
     </script>
-@endif
+
 @endsection
