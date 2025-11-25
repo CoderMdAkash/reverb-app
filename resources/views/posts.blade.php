@@ -20,7 +20,7 @@
                     
                    
                     <p><strong>Create New Post</strong></p>
-                    <form method="post" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+                    <form method="post" action="#" id="postForm" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Title:</label>
@@ -51,18 +51,8 @@
                                 <th>Body</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse($posts as $post)
-                                <tr>
-                                    <td>{{ $post->id }}</td>
-                                    <td>{{ $post->title }}</td>
-                                    <td>{{ $post->body }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5">There are no posts.</td>
-                                </tr>
-                            @endforelse
+                        <tbody class="data-table tbody">
+                            
                         </tbody>
                     </table>
 
@@ -74,6 +64,59 @@
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+function loadPosts() {
+    $.ajax({
+        url: "{{ route('posts.ajax') }}",
+        method: "GET",
+        success: function (data) {
+            $('.data-table tbody').html(data.html);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Load posts on page load
+    loadPosts();
+
+    document.getElementById('postForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // stop normal form submit
+        $.ajax({
+            url: "{{ route('posts.store') }}",
+            method: 'POST',
+            data: new FormData(this),
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if (data.success) {
+                    document.getElementById('notification').insertAdjacentHTML(
+                        'beforeend',
+                        '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i> '+data.message+'</span></div>'
+                    );
+
+                    document.getElementById('postForm').reset();
+
+                    loadPosts(); // 🔥 reload posts table dynamically
+                }
+            },
+            error: function(data) {
+                var errors = data.responseJSON;
+                $.each(errors.errors, function(key, value) {
+                    document.getElementById('notification').insertAdjacentHTML(
+                        'beforeend',
+                        '<div class="alert alert-danger alert-dismissible fade show"><span><i class="fa fa-circle-exclamation"></i> '+value+'</span></div>'
+                    );
+                });
+            }
+        })
+    });
+});
+
+</script>
 
     <script type="module">
             window.Echo.channel('posts')
@@ -82,6 +125,8 @@
                     
                     var d1 = document.getElementById('notification');
                     d1.insertAdjacentHTML('beforeend', '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i>  '+data.message+'</span></div>');
+
+                    loadPosts();
                 });
     </script>
 

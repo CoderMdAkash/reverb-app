@@ -41,6 +41,17 @@ class PostController extends Controller
 
         event(new PostCreate($post));
    
-        return back()->with('success','Post created successfully.');
+        return response()->json(['success','Post created successfully.']);
     }
+
+    public function ajaxPosts()
+    {
+        $posts = Post::latest()->get();
+
+        // Return HTML for the table rows
+        $html = view('posts.partials.table', compact('posts'))->render();
+
+        return response()->json(['html' => $html]);
+    }
+    
 }

@@ -17,6 +17,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+
+    Route::get('/posts/ajax', [PostController::class, 'ajaxPosts'])->name('posts.ajax');
+
 });
 
 Route::get('/test', [PostController::class, 'test'])->name('posts.test');
