@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LiveTrackingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
@@ -23,3 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/test', [PostController::class, 'test'])->name('posts.test');
+
+Route::get('/live', [LiveTrackingController::class, 'showLocation']);
+Route::get('/update-location', [LiveTrackingController::class, 'updateLocation']);
+
