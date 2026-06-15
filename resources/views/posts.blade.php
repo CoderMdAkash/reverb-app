@@ -37,7 +37,7 @@
                             @enderror
                         </div>
                         <div class="form-group mt-2">
-                            <button type="submit" class="btn btn-success btn-block"><i class="fa fa-save"></i> Submit</button>
+                            <button type="submit" id="postSubmitBtn" class="btn btn-success btn-block"><i class="fa fa-save"></i> Submit</button>
                         </div>
                     </form>
                     
@@ -83,6 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('postForm').addEventListener('submit', function(e) {
         e.preventDefault(); // stop normal form submit
+
+        document.getElementById('notification').innerHTML = '';
+        document.getElementById('postSubmitBtn').innerHTML = ('Submitting...');
+        document.getElementById('postSubmitBtn').disabled = true;
+
         $.ajax({
             url: "{{ route('posts.store') }}",
             method: 'POST',
@@ -92,6 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
             cache: false,
             processData: false,
             success: function(data) {
+
+                document.getElementById('postSubmitBtn').disabled = false;
+                document.getElementById('postSubmitBtn').innerHTML = ('Re-Submit');
+
                 if (data.success) {
                     document.getElementById('notification').insertAdjacentHTML(
                         'beforeend',
@@ -102,8 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     loadPosts(); // 🔥 reload posts table dynamically
                 }
+
             },
             error: function(data) {
+
+                document.getElementById('postSubmitBtn').disabled = false;
+
                 var errors = data.responseJSON;
                 $.each(errors.errors, function(key, value) {
                     document.getElementById('notification').insertAdjacentHTML(
@@ -111,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         '<div class="alert alert-danger alert-dismissible fade show"><span><i class="fa fa-circle-exclamation"></i> '+value+'</span></div>'
                     );
                 });
+
             }
         })
     });
@@ -118,16 +132,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-    <script type="module">
-            window.Echo.channel('posts')
-                .listen('.create', (data) => {
-                    console.log('Order status updated: ', data);
-                    
-                    var d1 = document.getElementById('notification');
-                    d1.insertAdjacentHTML('beforeend', '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i>  '+data.message+'</span></div>');
+<script type="module">
+    window.Echo.channel('chat-room')
+    .listen('.message.sent', (e) => {
+        console.log('New Message:', e.message);
 
-                    loadPosts();
-                });
-    </script>
+        loadPosts();
+    });
+</script>
 
 @endsection

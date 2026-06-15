@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Events\PostCreate;
@@ -39,7 +40,7 @@ class PostController extends Controller
             'body' => $request->body
         ]);
 
-        event(new PostCreate($post));
+        broadcast(new MessageSent($request->title))->toOthers();
    
         return response()->json(['success','Post created successfully.']);
     }
