@@ -42,8 +42,11 @@ class PostController extends Controller
 
         broadcast(new MessageSent($request->title))->toOthers();
    
-        return response()->json(['success','Post created successfully.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Post created successfully.']);
     }
+
 
     public function ajaxPosts()
     {

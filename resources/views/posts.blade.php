@@ -102,12 +102,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('postSubmitBtn').innerHTML = ('Re-Submit');
 
                 if (data.success) {
+                    document.getElementById('postForm').reset();
+                    
                     document.getElementById('notification').insertAdjacentHTML(
                         'beforeend',
                         '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i> '+data.message+'</span></div>'
                     );
-
-                    document.getElementById('postForm').reset();
 
                     loadPosts(); // 🔥 reload posts table dynamically
                 }
