@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (data.success) {
                     document.getElementById('postForm').reset();
-                    
+
                     document.getElementById('notification').insertAdjacentHTML(
                         'beforeend',
                         '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i> '+data.message+'</span></div>'
@@ -136,6 +136,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.Echo.channel('chat-room')
     .listen('.message.sent', (e) => {
         console.log('New Message:', e.message);
+
+        document.getElementById('notification').innerHTML = '';
+        document.getElementById('notification').insertAdjacentHTML(
+            'beforeend',
+            '<div class="alert alert-success alert-dismissible fade show"><span><i class="fa fa-circle-check"></i> New Message: '+e.message+'</span></div>'
+        );
 
         loadPosts();
     });
