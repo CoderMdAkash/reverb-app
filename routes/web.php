@@ -25,6 +25,19 @@ Route::get('/kill-artisan', function () {
     ]);
 });
 
+Route::get('/check-artisan', function () {
+
+    $output = [];
+
+    exec('pgrep -af artisan 2>&1', $output);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Running artisan processes checked.',
+        'processes' => $output,
+    ]);
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
