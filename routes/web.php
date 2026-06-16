@@ -12,33 +12,16 @@ Route::get('/', function () {
     return redirect('/posts');
 });
 
-Route::get('/restart-artisan-services', function (Request $request) {
+Route::get('/kill-artisan', function () {
 
-    Artisan::call('queue:restart');
+    $output = [];
 
-    try {
-        Artisan::call('reverb:restart');
-    } catch (\Throwable $e) {
-
-        try {
-            // Artisan::call('reverb:stop');
-            Artisan::call('reverb:start');
-        }catch (\Throwable $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage(),
-            ]);
-        }
-
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage(),
-        ]);
-    }
+    exec('pkill -f "artisan" 2>&1', $output);
 
     return response()->json([
         'status' => true,
-        'message' => 'Queue and Reverb restart signal sent successfully.',
+        'message' => 'All artisan processes killed.',
+        'output' => $output,
     ]);
 });
 
