@@ -4,11 +4,42 @@ use App\Http\Controllers\LiveTrackingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 Route::get('/', function () {
     return redirect('/posts');
-    return view('welcome');
+});
+
+Route::get('/restart-artisan-services', function (Request $request) {
+
+    Artisan::call('queue:restart');
+
+    try {
+        Artisan::call('reverb:restart');
+    } catch (\Throwable $e) {
+
+        try {
+            // Artisan::call('reverb:stop');
+            Artisan::call('reverb:start');
+        }catch (\Throwable $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage(),
+        ]);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Queue and Reverb restart signal sent successfully.',
+    ]);
 });
 
 Auth::routes();
