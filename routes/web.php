@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 Route::get('/', function () {
-    return redirect('/posts');
+    return redirect('/home');
 });
 
 Route::get('/kill-artisan', function () {
